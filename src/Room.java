@@ -10,6 +10,8 @@ public class Room {
 
     private HashMap<String, Integer> vote;
 
+    private static boolean isDay;
+
     public Room() {
         this.list = new ArrayList<>();
         this.dead = new ArrayList<>();
@@ -56,6 +58,10 @@ public class Room {
         }
 
         return null;
+    }
+
+    public static boolean isDay() {
+        return isDay;
     }
 
     public void deadByVote() {

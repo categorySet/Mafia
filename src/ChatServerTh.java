@@ -15,7 +15,6 @@ public class ChatServerTh extends Thread {
     private PrintWriter writer;
 
     private Role role;
-    private boolean isDay;
     private boolean dead;
 
     public ChatServerTh(Socket socket, Room room) {
@@ -45,6 +44,8 @@ public class ChatServerTh extends Thread {
 
     @Override
     public void run() {
+
+
         try {
             name = reader.readLine();
 
@@ -52,14 +53,17 @@ public class ChatServerTh extends Thread {
             room.sendMessageAll(name + "님이 입장하셨습니다.");
 
             while (true) {
-                doCitizen();
-
-                if (role.getRoleNum() == 1) {
-                    doMafia();
-                } else if (role.getRoleNum() == 3) {
-                    doPolice();
+                while (Room.isDay()) {
+                    doCitizen();
                 }
 
+                while (!Room.isDay()) {
+                    if (role.getRoleNum() == 1) {
+                        doMafia();
+                    } else if (role.getRoleNum() == 3) {
+                        doPolice();
+                    }
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -67,7 +71,7 @@ public class ChatServerTh extends Thread {
     }
 
     private void doMafia() {
-        if (!isDay) {
+        if (!Room.isDay()) {
             try {
                 String str = reader.readLine();
 
@@ -86,7 +90,7 @@ public class ChatServerTh extends Thread {
     }
 
     private void doCitizen() {
-        if (isDay) {
+        if (Room.isDay()) {
             try {
                 String str = reader.readLine();
 
@@ -104,7 +108,7 @@ public class ChatServerTh extends Thread {
     }
 
     private void doPolice() {
-        if (!isDay) {
+        if (!Room.isDay()) {
             try {
                 String str = reader.readLine();
 
