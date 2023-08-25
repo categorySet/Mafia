@@ -45,7 +45,6 @@ public class ChatServerTh extends Thread {
     @Override
     public void run() {
 
-
         try {
             name = reader.readLine();
 
@@ -53,14 +52,14 @@ public class ChatServerTh extends Thread {
             room.sendMessageAll(name + "님이 입장하셨습니다.");
 
             while (true) {
-                while (Room.isDay()) {
+                while (!room.isDay()) {
                     doCitizen();
                 }
 
-                while (!Room.isDay()) {
-                    if (role.getRoleNum() == 1) {
+                while (!room.isDay()) {
+                    if (role == Role.Mafia) {
                         doMafia();
-                    } else if (role.getRoleNum() == 3) {
+                    } else if (role == Role.Police) {
                         doPolice();
                     }
                 }
@@ -71,7 +70,7 @@ public class ChatServerTh extends Thread {
     }
 
     private void doMafia() {
-        if (!Room.isDay()) {
+        if (!room.isDay()) {
             try {
                 String str = reader.readLine();
 
@@ -90,7 +89,7 @@ public class ChatServerTh extends Thread {
     }
 
     private void doCitizen() {
-        if (Room.isDay()) {
+        if (room.isDay()) {
             try {
                 String str = reader.readLine();
 
@@ -108,7 +107,7 @@ public class ChatServerTh extends Thread {
     }
 
     private void doPolice() {
-        if (!Room.isDay()) {
+        if (!room.isDay()) {
             try {
                 String str = reader.readLine();
 

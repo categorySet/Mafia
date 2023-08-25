@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Room {
 
@@ -10,7 +7,7 @@ public class Room {
 
     private HashMap<String, Integer> vote;
 
-    private static boolean isDay;
+    private boolean isDay = true;
 
     public Room() {
         this.list = new ArrayList<>();
@@ -60,7 +57,7 @@ public class Room {
         return null;
     }
 
-    public static boolean isDay() {
+    public boolean isDay() {
         return isDay;
     }
 
@@ -73,6 +70,14 @@ public class Room {
     public void sendMessageAll(String message) {
         for (ChatServerTh th : list) {
             th.write(message);
+        }
+    }
+
+    public void sendMessage(String message, String name) {
+        for (ChatServerTh th : list) {
+            if (th.getName().equals(name)) {
+                th.write(message);
+            }
         }
     }
 
