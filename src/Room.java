@@ -9,6 +9,10 @@ public class Room {
 
     private boolean isDay = true;
 
+    private boolean timerStart = false;
+
+    private boolean mafiaKilled = false;
+
     public Room() {
         this.list = new ArrayList<>();
         this.dead = new ArrayList<>();
@@ -43,6 +47,14 @@ public class Room {
         }
     }
 
+    public boolean isTimerStart() {
+        return timerStart;
+    }
+
+    public void setTimerStart(boolean timerStart) {
+        this.timerStart = timerStart;
+    }
+
     public void clearVote() {
         vote.clear();
     }
@@ -69,7 +81,7 @@ public class Room {
 
     public void sendMessageAll(String message) {
         for (ChatServerTh th : list) {
-            th.writeln("전체 메시지: " + message);
+            th.writeln(message);
         }
     }
 
@@ -78,6 +90,25 @@ public class Room {
             if (th.getName().equals(name)) {
                 th.writeln(th.getName() + ": " + message);
             }
+        }
+    }
+
+    public boolean isMafiaKilled() {
+        return mafiaKilled;
+    }
+
+    public void setMafiaKilled(final boolean mafiaKilled) {
+        this.mafiaKilled = mafiaKilled;
+    }
+
+    public void switchDay() {
+        if (isDay) {
+            sendMessageAll("밤이 되었습니다.");
+            mafiaKilled = false;
+            isDay = false;
+        } else {
+            sendMessageAll("낮이 되었습니다.");
+            isDay = true;
         }
     }
 

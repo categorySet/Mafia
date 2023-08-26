@@ -49,7 +49,6 @@ public class ChatServerTh extends Thread {
 
     @Override
     public void run() {
-
         try {
             name = reader.readLine();
             System.out.println("name = " + name);
@@ -71,7 +70,7 @@ public class ChatServerTh extends Thread {
 
             writeln("당신은 " + role.getRoleName() + "입니다.");
             if (role.getRoleName().equals("Mafia")) {
-                writeln("밤에 한명을 죽일 수 있습니다.");
+                writeln("'/kill 이름' 명령어로 밤에 한명을 죽일 수 있습니다.");
                 writeln("마피아와 시민이 같은 수가 되면 승리합니다.");
             }
 
@@ -102,7 +101,8 @@ public class ChatServerTh extends Thread {
 
                 Pattern pattern = Pattern.compile("/kill (\\w+)");
                 Matcher matcher = pattern.matcher(str);
-                if (matcher.matches()) {
+                if (matcher.matches() && !room.isMafiaKilled()) {
+                    room.setMafiaKilled(true);
                     room.kill(matcher.group(1));
                     room.sendMessageAll("악랄한 마피아가 " + matcher.group(1) + "님을 죽였습니다.");
                 } else {
