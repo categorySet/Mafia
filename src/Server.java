@@ -24,8 +24,6 @@ public class Server {
         }
 
 
-
-
         try {
             ServerSocket serverSocket = new ServerSocket(5001);
 
