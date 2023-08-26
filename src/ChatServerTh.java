@@ -8,8 +8,13 @@ import java.util.regex.Pattern;
 
 public class ChatServerTh extends Thread {
 
+    private static final int MIN_PERSON = 5;
+    private static DayTimer dayTimer = null;
+
+    private ChatRoom gameRoom;
+    private ChatRoom deadRoom;
+
     private Socket socket;
-    private Room room;
     private String userName;
     private BufferedReader reader;
     private PrintWriter writer;
@@ -17,9 +22,11 @@ public class ChatServerTh extends Thread {
     private Role role;
     private boolean dead;
 
-    public ChatServerTh(Socket socket, Room room) {
+    public ChatServerTh(Socket socket, ChatRoom gameRoom) {
         this.socket = socket;
-        this.room = room;
+        this.gameRoom = gameRoom;
+
+        this.deadRoom = new ChatRoom();
 
         try {
             reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -41,14 +48,6 @@ public class ChatServerTh extends Thread {
     public void write(String message) {
         writer.print(message);
         writer.flush();
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
-    public Role getRole() {
-        return role;
     }
 
     @Override
@@ -78,18 +77,30 @@ public class ChatServerTh extends Thread {
                 writeln("마피아와 시민이 같은 수가 되면 승리합니다.");
             }
 
-            room.sendMessageAll(userName + "님이 입장하셨습니다.");
+            gameRoom.sendMessageAll(userName + "님이 입장하셨습니다.");
+
+            while (gameRoom.getListSize() < MIN_PERSON) {
+                String str = reader.readLine();
+
+                gameRoom.sendMessageExceptMe(str, this.userName);
+            }
+
+            if (dayTimer == null) {
+                dayTimer = new DayTimer();
+
+                dayTimer.start();
+            }
 
             while (true) {
-                while (room.isDay()) {
-                    doCitizen();
+                while (dayTimer.isDay()) {
+                    doCitizen(dayTimer.isDay());
                 }
 
-                while (!room.isDay()) {
+                while (!dayTimer.isDay()) {
                     if (role == Role.Mafia) {
-                        doMafia();
+                        doMafia(dayTimer.isDay());
                     } else if (role == Role.Police) {
-                        doPolice();
+                        doPolice(dayTimer.isDay());
                     }
                 }
             }
@@ -98,39 +109,37 @@ public class ChatServerTh extends Thread {
         }
     }
 
-    private void doMafia() {
-        if (!room.isDay()) {
+    private void doMafia(boolean isDay) {
+        if (!isDay) {
             try {
                 String str = reader.readLine();
 
                 Pattern pattern = Pattern.compile("/kill (\\w+)");
                 Matcher matcher = pattern.matcher(str);
-                if (matcher.matches() && !room.isMafiaKilled()) {
-                    room.setMafiaKilled(true);
-                    room.kill(matcher.group(1));
-                    room.sendMessageAll("악랄한 마피아가 " + matcher.group(1) + "님을 죽였습니다.");
+                if (matcher.matches()) {
+                    gameRoom.sendMessageAll("악랄한 마피아가 " + matcher.group(1) + "님을 죽였습니다.");
                 } else {
-                    room.sendMessageAll(userName + ": " + str);
+                    gameRoom.sendMessageAll(userName + ": " + str);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
         } else {
-            doCitizen();
+            doCitizen(isDay);
         }
     }
 
-    private void doCitizen() {
-        if (room.isDay()) {
+    private void doCitizen(boolean isDay) {
+        if (isDay) {
             try {
                 String str = reader.readLine();
 
                 Pattern pattern = Pattern.compile("/vote (\\w+)");
                 Matcher matcher = pattern.matcher(str);
                 if (matcher.matches()) {
-                    room.vote(matcher.group(1));
+                    // TODO 투표 기능
                 } else {
-                    room.sendMessageAll(userName + ": " + str);
+                    gameRoom.sendMessageAll(userName + ": " + str);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -138,8 +147,8 @@ public class ChatServerTh extends Thread {
         }
     }
 
-    private void doPolice() {
-        if (!room.isDay()) {
+    private void doPolice(boolean isDay) {
+        if (!isDay) {
             try {
                 String str = reader.readLine();
 
@@ -147,13 +156,13 @@ public class ChatServerTh extends Thread {
                 Matcher matcher = pattern.matcher(str);
 
                 if (matcher.matches()) {
-                    writeln(matcher.group(1) + "은 " + room.scan(matcher.group(1)) + "입니다.");
+                    // TODO 스캔 기능
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
         } else {
-            doCitizen();
+            doCitizen(isDay);
         }
     }
 
