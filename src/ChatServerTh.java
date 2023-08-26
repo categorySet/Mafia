@@ -10,7 +10,7 @@ public class ChatServerTh extends Thread {
 
     private Socket socket;
     private Room room;
-    private String name;
+    private String userName;
     private BufferedReader reader;
     private PrintWriter writer;
 
@@ -27,6 +27,10 @@ public class ChatServerTh extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public String getUserName() {
+        return userName;
     }
 
     public void writeln(String message) {
@@ -50,8 +54,8 @@ public class ChatServerTh extends Thread {
     @Override
     public void run() {
         try {
-            name = reader.readLine();
-            System.out.println("name = " + name);
+            userName = reader.readLine();
+            System.out.println("name = " + userName);
 
             writeln("===직업 선택===");
             writeln("0. 마피아 1. 시민 2. 의사 3. 경찰");
@@ -74,7 +78,7 @@ public class ChatServerTh extends Thread {
                 writeln("마피아와 시민이 같은 수가 되면 승리합니다.");
             }
 
-            room.sendMessageAll(name + "님이 입장하셨습니다.");
+            room.sendMessageAll(userName + "님이 입장하셨습니다.");
 
             while (true) {
                 while (room.isDay()) {
@@ -106,7 +110,7 @@ public class ChatServerTh extends Thread {
                     room.kill(matcher.group(1));
                     room.sendMessageAll("악랄한 마피아가 " + matcher.group(1) + "님을 죽였습니다.");
                 } else {
-                    room.sendMessageAll(name + ": " + str);
+                    room.sendMessageAll(userName + ": " + str);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -126,7 +130,7 @@ public class ChatServerTh extends Thread {
                 if (matcher.matches()) {
                     room.vote(matcher.group(1));
                 } else {
-                    room.sendMessageAll(name + ": " + str);
+                    room.sendMessageAll(userName + ": " + str);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -143,7 +147,7 @@ public class ChatServerTh extends Thread {
                 Matcher matcher = pattern.matcher(str);
 
                 if (matcher.matches()) {
-                    writeln(matcher.group(1) + "은 " + room.scan(matcher.group(1)).getRoleName() + "입니다.");
+                    writeln(matcher.group(1) + "은 " + room.scan(matcher.group(1)) + "입니다.");
                 }
             } catch (IOException e) {
                 e.printStackTrace();

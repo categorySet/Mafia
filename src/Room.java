@@ -61,7 +61,7 @@ public class Room {
 
     public Role scan(String name) {
         for (ChatServerTh c : list) {
-            if (c.getName().equals(name)) {
+            if (c.getUserName().equals(name)) {
                 return c.getRole();
             }
         }
@@ -87,8 +87,8 @@ public class Room {
 
     public void sendMessage(String message, String name) {
         for (ChatServerTh th : list) {
-            if (th.getName().equals(name)) {
-                th.writeln(th.getName() + ": " + message);
+            if (th.getUserName().equals(name)) {
+                th.writeln(th.getUserName() + ": " + message);
             }
         }
     }
