@@ -1,6 +1,7 @@
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Random;
 
 public class Server {
 
@@ -14,11 +15,11 @@ public class Server {
                 Socket socket = serverSocket.accept();
                 System.out.println("접속: " + socket.getInetAddress());
 
-                ChatServerTh th = new ChatServerTh(socket, room);
+                ChatServerTh chatServerTh = new ChatServerTh(socket, room);
 
-                room.addClient(th);
+                room.addClient(chatServerTh);
 
-                th.start();
+                chatServerTh.start();
             }
         } catch (IOException e) {
             e.printStackTrace();
