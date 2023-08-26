@@ -18,7 +18,7 @@ public class MafiaRoom {
 
     public void mafiaChat(String message) {
         for (ChatServerTh c : list) {
-            c.write(message);
+            c.writeln(message);
         }
     }
 

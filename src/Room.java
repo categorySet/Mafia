@@ -69,14 +69,14 @@ public class Room {
 
     public void sendMessageAll(String message) {
         for (ChatServerTh th : list) {
-            th.write(message);
+            th.writeln(message);
         }
     }
 
     public void sendMessage(String message, String name) {
         for (ChatServerTh th : list) {
             if (th.getName().equals(name)) {
-                th.write(message);
+                th.writeln(message);
             }
         }
     }
