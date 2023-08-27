@@ -3,8 +3,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class ChatServerTh extends Thread {
 
@@ -12,21 +10,17 @@ public class ChatServerTh extends Thread {
     private static DayTimer dayTimer = null;
 
     private ChatRoom gameRoom;
-    private ChatRoom deadRoom;
 
     private Socket socket;
     private String userName;
     private BufferedReader reader;
     private PrintWriter writer;
 
-    private Role role;
-    private boolean dead;
+    private RolesAdapter rolesAdapter;
 
     public ChatServerTh(Socket socket, ChatRoom gameRoom) {
         this.socket = socket;
         this.gameRoom = gameRoom;
-
-        this.deadRoom = new ChatRoom();
 
         try {
             reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -34,6 +28,10 @@ public class ChatServerTh extends Thread {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void setRoles(Roles roles) {
+        this.rolesAdapter = new RolesAdapter(roles);
     }
 
     public String getUserName() {
@@ -48,6 +46,10 @@ public class ChatServerTh extends Thread {
     public void write(String message) {
         writer.print(message);
         writer.flush();
+    }
+
+    public Roles getRoles() {
+        return rolesAdapter.getRoles();
     }
 
     @Override
@@ -69,10 +71,23 @@ public class ChatServerTh extends Thread {
                 }
             } while (!(0 <= select && select < Role.values().length));
 
-            this.role = Role.getByRoleNum(select);
+            switch (select) {
+                case 0:
+                    rolesAdapter = new RolesAdapter(new Mafia(gameRoom, dayTimer));
+                    break;
+                case 1:
+                    rolesAdapter = new RolesAdapter(new Citizen(gameRoom, dayTimer));
+                    break;
+                case 2:
+                    rolesAdapter = new RolesAdapter(new Doctor(gameRoom, dayTimer));
+                    break;
+                case 3:
+                    rolesAdapter = new RolesAdapter(new Police(gameRoom, dayTimer));
+                    break;
+            }
 
-            writeln("당신은 " + role.getRoleName() + "입니다.");
-            if (role.getRoleName().equals("Mafia")) {
+            writeln("당신은 " + rolesAdapter.toString() + "입니다.");
+            if (rolesAdapter.toString().equals("Mafia")) {
                 writeln("'/kill 이름' 명령어로 밤에 한명을 죽일 수 있습니다.");
                 writeln("마피아와 시민이 같은 수가 되면 승리합니다.");
             }
@@ -95,77 +110,18 @@ public class ChatServerTh extends Thread {
 
             while (true) {
                 while (dayTimer.isDay()) {
-                    doCitizen(dayTimer.isDay());
+
                 }
 
                 while (!dayTimer.isDay()) {
-                    if (role == Role.Mafia) {
-                        doMafia(dayTimer.isDay());
-                    } else if (role == Role.Police) {
-                        doPolice(dayTimer.isDay());
-                    }
+
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
 
-    private void doMafia(boolean isDay) {
-        if (!isDay) {
-            try {
-                String str = reader.readLine();
 
-                Pattern pattern = Pattern.compile("/kill (\\w+)");
-                Matcher matcher = pattern.matcher(str);
-                if (matcher.matches()) {
-                    gameRoom.sendMessageAll("악랄한 마피아가 " + matcher.group(1) + "님을 죽였습니다.");
-                } else {
-                    gameRoom.sendMessageAll(userName + ": " + str);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            doCitizen(isDay);
-        }
-    }
-
-    private void doCitizen(boolean isDay) {
-        if (isDay) {
-            try {
-                String str = reader.readLine();
-
-                Pattern pattern = Pattern.compile("/vote (\\w+)");
-                Matcher matcher = pattern.matcher(str);
-                if (matcher.matches()) {
-                    // TODO 투표 기능
-                } else {
-                    gameRoom.sendMessageAll(userName + ": " + str);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-    private void doPolice(boolean isDay) {
-        if (!isDay) {
-            try {
-                String str = reader.readLine();
-
-                Pattern pattern = Pattern.compile("/scan (\\w+)");
-                Matcher matcher = pattern.matcher(str);
-
-                if (matcher.matches()) {
-                    // TODO 스캔 기능
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            doCitizen(isDay);
-        }
     }
 
 }
