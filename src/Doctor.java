@@ -2,8 +2,8 @@ public class Doctor extends Roles {
 
     public static boolean saved;
 
-    public Doctor(final ChatRoom gameRoom, final DayTimer dayTimer) {
-        super(gameRoom, dayTimer);
+    public Doctor(final ChatRoom gameRoom) {
+        super(gameRoom);
     }
 
     public void save(String name) {

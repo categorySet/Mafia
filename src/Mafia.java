@@ -4,8 +4,8 @@ public class Mafia extends Roles {
     public static String roleName = "Mafia";
     public static String nextKill = "";
 
-    public Mafia(final ChatRoom chatRoom, final DayTimer dayTimer) {
-        super(chatRoom, dayTimer);
+    public Mafia(final ChatRoom chatRoom) {
+        super(chatRoom);
     }
 
     public void kill(String name) {

@@ -8,9 +8,6 @@ import java.util.regex.Pattern;
 
 public class ChatServerTh extends Thread {
 
-    private static final int MIN_PERSON = 5;
-    private static DayTimer dayTimer = null;
-
     private ChatRoom gameRoom;
 
     private Socket socket;
@@ -78,16 +75,16 @@ public class ChatServerTh extends Thread {
 
             switch (select) {
                 case 0:
-                    rolesAdapter = new RolesAdapter(new Mafia(gameRoom, dayTimer));
+                    rolesAdapter = new RolesAdapter(new Mafia(gameRoom));
                     break;
                 case 1:
-                    rolesAdapter = new RolesAdapter(new Citizen(gameRoom, dayTimer));
+                    rolesAdapter = new RolesAdapter(new Citizen(gameRoom));
                     break;
                 case 2:
-                    rolesAdapter = new RolesAdapter(new Doctor(gameRoom, dayTimer));
+                    rolesAdapter = new RolesAdapter(new Doctor(gameRoom));
                     break;
                 case 3:
-                    rolesAdapter = new RolesAdapter(new Police(gameRoom, dayTimer));
+                    rolesAdapter = new RolesAdapter(new Police(gameRoom));
                     break;
             }
 
@@ -95,28 +92,23 @@ public class ChatServerTh extends Thread {
             if (rolesAdapter.toString().equals("Mafia")) {
                 writeln("'/use 이름' 명령어로 밤에 한명을 죽일 수 있습니다.");
                 writeln("마피아와 시민이 같은 수가 되면 승리합니다.");
+            } else if (rolesAdapter.toString().equals("Doctor")) {
+                writeln("'/use 이름' 명령어로 밤에 마피아에 지목된 사람을 살릴 수 있습니다.");
+            } else if (rolesAdapter.toString().equals("Police")) {
+                writeln("'/use 이름' 명령어로 밤에 한 사람의 직업을 확인할 수 있습니다.");
             }
 
             gameRoom.sendMessageAll(userName + "님이 입장하셨습니다.");
 
-            while (gameRoom.getListSize() < MIN_PERSON) {
-                String str = reader.readLine();
+            ChatRoom.selected++;
 
-                gameRoom.sendMessageExceptMe(str, this.userName);
-            }
+            while (ChatRoom.selected < ChatRoom.MIN_PERSON) {
 
-            gameRoom.sendMessageAll("=== 게임 시작 ===");
-
-            if (dayTimer == null) {
-                dayTimer = new DayTimer(gameRoom);
-
-                dayTimer.start();
             }
 
             while (true) {
-                while (dayTimer.isDay()) {
-                    String read = reader.readLine();
-
+                String read = reader.readLine();
+                while (DayTimer.isDay()) {
                     Pattern pattern = Pattern.compile("/vote (\\w+)");
                     Matcher matcher = pattern.matcher(read);
 
@@ -125,19 +117,21 @@ public class ChatServerTh extends Thread {
                         writeln("투표되었습니다.");
                         rolesAdapter.getRoles().voted = true;
                     } else {
-                        gameRoom.sendMessageAll(read);
+                        gameRoom.sendMessageAll("[" + userName + "]" + read);
                     }
                 }
 
-                while (!dayTimer.isDay()) {
-                    String read = reader.readLine();
-
+                while (!DayTimer.isDay()) {
                     Pattern pattern = Pattern.compile("/use (\\w+)");
                     Matcher matcher = pattern.matcher(read);
                     if (matcher.matches()) {
                         writeln(rolesAdapter.useAbllitity(matcher.group(1)));
+                        try {
+                            gameRoom.kill(Mafia.nextKill);
+                        } catch (NullPointerException e) {
+                            gameRoom.sendMessageAll("마피아가 죽이지 않거나 의사가 살렸습니다.");
+                        }
                     } else {
-                        gameRoom.sendMessageAll(read);
                     }
                 }
 

@@ -1,13 +1,19 @@
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.*;
 
 /**
  * 플레이어들의 상태와 대화를 담당하는 클래스
  */
-public class ChatRoom {
+public class ChatRoom extends Thread {
 
-    private ArrayList<ChatServerTh> list;
+    public static final int MIN_PERSON = 5;
+    private static DayTimer dayTimer = null;
+
+    private static ArrayList<ChatServerTh> list;
     private ArrayList<ChatServerTh> deadList;
+
+    public static int selected = 0;
 
     public ChatRoom() {
         this.list = new ArrayList<>();
@@ -30,7 +36,7 @@ public class ChatRoom {
         }
     }
 
-    public void sendMessageAll(String message) {
+    public static void sendMessageAll(String message) {
         for (ChatServerTh th : list) {
             th.writeln(message);
         }
@@ -79,4 +85,22 @@ public class ChatRoom {
         }
     }
 
+    @Override
+    public void run() {
+        while (selected < MIN_PERSON) {
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+
+        sendMessageAll("=== 게임 시작 ===");
+
+        if (dayTimer == null) {
+            dayTimer = new DayTimer(this);
+
+            dayTimer.start();
+        }
+    }
 }

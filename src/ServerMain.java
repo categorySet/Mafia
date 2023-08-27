@@ -7,6 +7,8 @@ public class ServerMain {
     public static void main(String[] args) {
         ChatRoom chatRoom = new ChatRoom();
 
+        chatRoom.start();
+
         try {
             ServerSocket serverSocket = new ServerSocket(5001);
 

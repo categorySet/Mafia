@@ -6,10 +6,10 @@ import java.util.Timer;
 public class DayTimer extends Thread {
 
     private Timer timer = new Timer();
-    private boolean isDay = false;
+    public static boolean isDay = false;
     private int time = 30;
 
-    public boolean isDay() {
+    public static boolean isDay() {
         return isDay;
     }
 
@@ -39,6 +39,8 @@ public class DayTimer extends Thread {
                 Mafia.killed = false;
                 Doctor.saved = false;
                 Police.scaned = false;
+
+                Mafia.nextKill = null;
 
             } else {
                 Roles.getVoteMap().clear();

@@ -5,16 +5,14 @@ import java.util.Map;
 public abstract class Roles {
 
     public ChatRoom chatRoom;
-    public DayTimer dayTimer;
     public boolean dead;
     private static HashMap<String, Integer> voteMap;
     public static String roleName;
 
     public boolean voted;
 
-    public Roles(final ChatRoom chatRoom, final DayTimer dayTimer) {
+    public Roles(final ChatRoom chatRoom) {
         this.chatRoom = chatRoom;
-        this.dayTimer = dayTimer;
 
         voteMap = new HashMap<>();
     }
