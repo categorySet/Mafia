@@ -85,6 +85,8 @@ public class ChatServerTh extends Thread {
                 gameRoom.sendMessageExceptMe(str, this.userName);
             }
 
+            gameRoom.sendMessageAll("=== 게임 시작 ===");
+
             if (dayTimer == null) {
                 dayTimer = new DayTimer();
 
