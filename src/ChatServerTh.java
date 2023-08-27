@@ -3,6 +3,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ChatServerTh extends Thread {
 
@@ -17,6 +19,9 @@ public class ChatServerTh extends Thread {
     private PrintWriter writer;
 
     private RolesAdapter rolesAdapter;
+
+    private int countMafia = 0;
+    private int countCitizen = 0;
 
     public ChatServerTh(Socket socket, ChatRoom gameRoom) {
         this.socket = socket;
@@ -88,7 +93,7 @@ public class ChatServerTh extends Thread {
 
             writeln("당신은 " + rolesAdapter.toString() + "입니다.");
             if (rolesAdapter.toString().equals("Mafia")) {
-                writeln("'/kill 이름' 명령어로 밤에 한명을 죽일 수 있습니다.");
+                writeln("'/use 이름' 명령어로 밤에 한명을 죽일 수 있습니다.");
                 writeln("마피아와 시민이 같은 수가 되면 승리합니다.");
             }
 
@@ -103,24 +108,61 @@ public class ChatServerTh extends Thread {
             gameRoom.sendMessageAll("=== 게임 시작 ===");
 
             if (dayTimer == null) {
-                dayTimer = new DayTimer();
+                dayTimer = new DayTimer(gameRoom);
 
                 dayTimer.start();
             }
 
             while (true) {
-                while (dayTimer.isDay()) {
+                countMafia = 0;
+                countCitizen = 0;
 
+                if (rolesAdapter.getRoles() instanceof Mafia) {
+                    countMafia++;
+                } else if (rolesAdapter.getRoles() instanceof Citizen) {
+                    countCitizen++;
+                }
+
+                if (countMafia == countCitizen && countMafia == 0) {
+                    break;
+                }
+
+                while (dayTimer.isDay()) {
+                    String read = reader.readLine();
+
+                    Pattern pattern = Pattern.compile("/vote (\\w+)");
+                    Matcher matcher = pattern.matcher(read);
+
+                    if (matcher.matches() && getRoles().voted) {
+                        rolesAdapter.getRoles().vote(matcher.group(1));
+                        writeln("투표되었습니다.");
+                        rolesAdapter.getRoles().voted = true;
+                    } else {
+                        gameRoom.sendMessageAll(read);
+                    }
                 }
 
                 while (!dayTimer.isDay()) {
+                    String read = reader.readLine();
 
+                    Pattern pattern = Pattern.compile("/use (\\w+)");
+                    Matcher matcher = pattern.matcher(read);
+                    if (matcher.matches()) {
+                        writeln(rolesAdapter.useAbllitity(matcher.group(1)));
+                    } else {
+                        gameRoom.sendMessageAll(read);
+                    }
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
+        if (countMafia == 0) {
+            gameRoom.sendMessageAll("시민이 승리했습니다.");
+        } else if (countMafia >= countCitizen) {
+            gameRoom.sendMessageAll("마피아가 승리했습니다.");
+        }
 
     }
 

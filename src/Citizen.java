@@ -1,5 +1,7 @@
 public class Citizen extends Roles {
 
+    private boolean voted = false;
+
     public Citizen(final ChatRoom chatRoom, final DayTimer dayTimer) {
         super(chatRoom, dayTimer);
     }
@@ -7,6 +9,7 @@ public class Citizen extends Roles {
     public void vote(String name) {
         if (dayTimer.isDay()) {
             vote(name);
+            voted = true;
         }
     }
 

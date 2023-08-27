@@ -13,6 +13,12 @@ public class DayTimer extends Thread {
         return isDay;
     }
 
+    private ChatRoom room;
+
+    public DayTimer(final ChatRoom room) {
+        this.room = room;
+    }
+
     @Override
     public void run() {
         while (true) {
@@ -28,9 +34,24 @@ public class DayTimer extends Thread {
             if (isDay) {
                 isDay = false;
                 System.out.println("밤이 되었습니다.");
+                room.sendMessageAll("밤이 되었습니다.");
+
+                Mafia.killed = false;
+                Doctor.saved = false;
+                Police.scaned = false;
+
             } else {
+                Roles.getVoteMap().clear();
+
+                for (ChatServerTh c : room.getList()) {
+                    if (c.getRoles() != null) {
+                        c.getRoles().voted = false;
+                    }
+                }
+
                 isDay = true;
                 System.out.println("낮이 되었습니다.");
+                room.sendMessageAll("낮이 되었습니다.");
             }
 
             time = 30;

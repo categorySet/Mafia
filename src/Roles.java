@@ -10,9 +10,17 @@ public abstract class Roles {
     private static HashMap<String, Integer> voteMap;
     public static String roleName;
 
+    public boolean voted;
+
     public Roles(final ChatRoom chatRoom, final DayTimer dayTimer) {
         this.chatRoom = chatRoom;
         this.dayTimer = dayTimer;
+
+        voteMap = new HashMap<>();
+    }
+
+    public static HashMap<String, Integer> getVoteMap() {
+        return voteMap;
     }
 
     public synchronized void vote(String name) {
@@ -21,6 +29,8 @@ public abstract class Roles {
         } else {
             voteMap.put(name, 1);
         }
+
+        voted = true;
     }
 
     public synchronized String getResult() {

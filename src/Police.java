@@ -1,5 +1,7 @@
 public class Police extends Citizen {
 
+    public static boolean scaned;
+
     public Police(final ChatRoom chatRoom, final DayTimer dayTimer) {
         super(chatRoom, dayTimer);
     }

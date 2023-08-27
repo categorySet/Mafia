@@ -66,6 +66,10 @@ public class ChatRoom {
         return null;
     }
 
+    public ArrayList<ChatServerTh> getList() {
+        return list;
+    }
+
     public void setKilled(String name) {
         for (ChatServerTh th : list) {
             if (th.getUserName().equals(name)) {
