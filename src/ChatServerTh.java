@@ -114,19 +114,6 @@ public class ChatServerTh extends Thread {
             }
 
             while (true) {
-                countMafia = 0;
-                countCitizen = 0;
-
-                if (rolesAdapter.getRoles() instanceof Mafia) {
-                    countMafia++;
-                } else if (rolesAdapter.getRoles() instanceof Citizen) {
-                    countCitizen++;
-                }
-
-                if (countMafia == countCitizen && countMafia == 0) {
-                    break;
-                }
-
                 while (dayTimer.isDay()) {
                     String read = reader.readLine();
 
@@ -152,6 +139,19 @@ public class ChatServerTh extends Thread {
                     } else {
                         gameRoom.sendMessageAll(read);
                     }
+                }
+
+                countMafia = 0;
+                countCitizen = 0;
+
+                if (rolesAdapter.getRoles() instanceof Mafia) {
+                    countMafia++;
+                } else if (rolesAdapter.getRoles() instanceof Citizen) {
+                    countCitizen++;
+                }
+
+                if (countMafia == countCitizen && countMafia == 0) {
+                    break;
                 }
             }
         } catch (Exception e) {
