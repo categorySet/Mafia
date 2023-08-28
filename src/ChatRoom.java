@@ -20,6 +20,8 @@ public class ChatRoom extends Thread {
     private int countMafia = 0;
     private int countCitizen = 0;
 
+    private static List<String> winners;
+
     public ChatRoom() {
         this.list = new ArrayList<>();
     }
@@ -162,10 +164,21 @@ public class ChatRoom extends Thread {
             }
         }
 
+        winners = new ArrayList<>();
         if (countMafia == 0) {
             sendMessageAll("시민이 승리했습니다.");
+            for (ChatServerTh c : list) {
+                if (c.getRoles() instanceof Citizen) {
+                    winners.add(c.getUserName());
+                }
+            }
         } else if (countMafia >= countCitizen) {
             sendMessageAll("마피아가 승리했습니다.");
+            for (ChatServerTh c : list) {
+                if (c.getRoles() instanceof  Mafia) {
+                    winners.add(c.getUserName());
+                }
+            }
         }
     }
 }
