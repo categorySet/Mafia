@@ -37,6 +37,7 @@ public class ChatRoom extends Thread {
             if (c.getUserName().equals(name)) {
                 delClient(c);
                 c.writeln("당신은 마피아에 의해 죽었습니다.");
+                sendMessageAll("악랄한 마피아에 의해 " + name + "님이 죽었습니다.");
             }
         }
     }
