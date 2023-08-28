@@ -22,7 +22,7 @@ public class RolesAdapter {
                 Doctor.saved = true;
                 d.save(name);
             }
-            return name + " 님을 구하러갑니다.";
+            return name + " 님을 구하러갑니다..";
         } else if (roles instanceof Police) {
             Police p = (Police) roles;
 

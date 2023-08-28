@@ -60,7 +60,7 @@ public class ChatRoom extends Thread {
                         th.writeln("투표되었습니다.");
                         rolesAdapter.getRoles().voted = true;
                     } else {
-                        sendMessageAll("[" + th.getUserName() + "]" + message);
+                        sendMessageAll("[" + th.getUserName() + "] " + message);
                     }
                 }
             }
