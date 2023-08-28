@@ -50,8 +50,17 @@ public class ChatRoom extends Thread {
         }
     }
 
+    private boolean firstLoop = true;
     public void sendMessageAll(String message, RolesAdapter rolesAdapter, ChatServerTh chatServerTh) {
         if (DayTimer.isDay()) {
+            if (firstLoop && Mafia.nextKill.equals(Doctor.savePerson)) {
+                sendMessageAll("의사가 " + Doctor.savePerson + "님을 구했습니다.");
+                firstLoop = false;
+            } else if (firstLoop) {
+                kill(Mafia.nextKill);
+                firstLoop = false;
+            }
+
             for (ChatServerTh th : list) {
                 if (th == chatServerTh) {
                     Pattern pattern = Pattern.compile("/vote (\\w+)");
@@ -67,6 +76,7 @@ public class ChatRoom extends Thread {
                 }
             }
         } else {
+            firstLoop = true;
             for (ChatServerTh th : list) {
                 if (th == chatServerTh) {
                     Pattern pattern = Pattern.compile("/use (\\w+)");
@@ -74,11 +84,6 @@ public class ChatRoom extends Thread {
 
                     if (matcher.matches() && !DayTimer.isDay()) {
                         th.writeln(rolesAdapter.useAbllitity(matcher.group(1)));
-                        try {
-                            kill(Mafia.nextKill);
-                        } catch (NullPointerException e) {
-                            sendMessageAll("마피아가 죽이지 않거나 의사가 살렸습니다.");
-                        }
                     }
                 }
             }
