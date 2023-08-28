@@ -17,8 +17,6 @@ public class ChatServerTh extends Thread {
 
     private RolesAdapter rolesAdapter;
 
-    private int countMafia = 0;
-    private int countCitizen = 0;
 
     public ChatServerTh(Socket socket, ChatRoom gameRoom) {
         this.socket = socket;
@@ -86,6 +84,8 @@ public class ChatServerTh extends Thread {
                 case 3:
                     rolesAdapter = new RolesAdapter(new Police(gameRoom));
                     break;
+                default:
+                    rolesAdapter = new RolesAdapter(new Citizen(gameRoom));
             }
 
             writeln("당신은 " + rolesAdapter.toString() + "입니다.");
@@ -103,61 +103,18 @@ public class ChatServerTh extends Thread {
             ChatRoom.selected++;
 
             while (ChatRoom.selected < ChatRoom.MIN_PERSON) {
-
+                Thread.sleep(1000);
             }
 
             while (true) {
                 String read = reader.readLine();
-                while (DayTimer.isDay()) {
-                    Pattern pattern = Pattern.compile("/vote (\\w+)");
-                    Matcher matcher = pattern.matcher(read);
 
-                    if (matcher.matches() && getRoles().voted) {
-                        rolesAdapter.getRoles().vote(matcher.group(1));
-                        writeln("투표되었습니다.");
-                        rolesAdapter.getRoles().voted = true;
-                    } else {
-                        gameRoom.sendMessageAll("[" + userName + "]" + read);
-                    }
-                }
-
-                while (!DayTimer.isDay()) {
-                    Pattern pattern = Pattern.compile("/use (\\w+)");
-                    Matcher matcher = pattern.matcher(read);
-                    if (matcher.matches()) {
-                        writeln(rolesAdapter.useAbllitity(matcher.group(1)));
-                        try {
-                            gameRoom.kill(Mafia.nextKill);
-                        } catch (NullPointerException e) {
-                            gameRoom.sendMessageAll("마피아가 죽이지 않거나 의사가 살렸습니다.");
-                        }
-                    } else {
-                    }
-                }
-
-                countMafia = 0;
-                countCitizen = 0;
-
-                if (rolesAdapter.getRoles() instanceof Mafia) {
-                    countMafia++;
-                } else if (rolesAdapter.getRoles() instanceof Citizen) {
-                    countCitizen++;
-                }
-
-                if (countMafia == countCitizen && countMafia == 0) {
-                    break;
-                }
+                gameRoom.sendMessageAll(read, rolesAdapter, this);
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        if (countMafia == 0) {
-            gameRoom.sendMessageAll("시민이 승리했습니다.");
-        } else if (countMafia >= countCitizen) {
-            gameRoom.sendMessageAll("마피아가 승리했습니다.");
-        }
-
     }
+
 
 }

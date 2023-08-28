@@ -6,8 +6,10 @@ import java.util.Timer;
 public class DayTimer extends Thread {
 
     private Timer timer = new Timer();
-    public static boolean isDay = false;
+    private static boolean isDay = false;
     private int time = 30;
+
+    private boolean flag = true;
 
     public static boolean isDay() {
         return isDay;
@@ -21,6 +23,8 @@ public class DayTimer extends Thread {
 
     @Override
     public void run() {
+
+
         while (true) {
             while (time > 0) {
                 time--;
@@ -33,7 +37,6 @@ public class DayTimer extends Thread {
 
             if (isDay) {
                 isDay = false;
-                System.out.println("밤이 되었습니다.");
                 room.sendMessageAll("밤이 되었습니다.");
 
                 Mafia.killed = false;
@@ -43,6 +46,9 @@ public class DayTimer extends Thread {
                 Mafia.nextKill = null;
 
             } else {
+                isDay = true;
+                room.sendMessageAll("낮이 되었습니다.");
+
                 Roles.getVoteMap().clear();
 
                 for (ChatServerTh c : room.getList()) {
@@ -51,9 +57,6 @@ public class DayTimer extends Thread {
                     }
                 }
 
-                isDay = true;
-                System.out.println("낮이 되었습니다.");
-                room.sendMessageAll("낮이 되었습니다.");
             }
 
             time = 30;

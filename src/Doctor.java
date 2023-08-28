@@ -1,4 +1,4 @@
-public class Doctor extends Roles {
+public class Doctor extends Citizen {
 
     public static boolean saved;
 
