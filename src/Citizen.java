@@ -6,13 +6,6 @@ public class Citizen extends Roles {
         super(chatRoom);
     }
 
-    public void vote(String name) {
-        if (DayTimer.isDay()) {
-            vote(name);
-            voted = true;
-        }
-    }
-
     @Override
     public String toString() {
         return "Citizen";

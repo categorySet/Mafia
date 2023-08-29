@@ -31,7 +31,7 @@ public abstract class Roles {
         voted = true;
     }
 
-    public synchronized String getResult() {
+    public static synchronized String getResult() {
         Map.Entry<String, Integer> entry = voteMap.entrySet().stream().max(Comparator.comparingInt(x -> x.getValue())).orElseGet(null);
 
         if (entry != null) {

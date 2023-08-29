@@ -34,12 +34,25 @@ public class ChatRoom extends Thread {
         list.remove(chatServerTh);
     }
 
-    public void kill (String name) {
+    public void kill(String name) {
         for (ChatServerTh c : list) {
             if (c.getUserName().equals(name)) {
                 delClient(c);
                 c.writeln("당신은 마피아에 의해 죽었습니다.");
                 sendMessageAll("악랄한 마피아에 의해 " + name + "님이 죽었습니다.");
+            }
+        }
+    }
+
+    public void killByVoting(String name) {
+        synchronized (list) {
+            for (int i = list.size() - 1; i >= 0; i--) {
+                ChatServerTh c = list.get(i);
+                if (c.getUserName().equals(name)) {
+                    delClient(c);
+                    c.writeln("투표에 의해 죽었습니다..");
+                    sendMessageAll("투표에 의해 " + name + "님이 죽었습니다.");
+                }
             }
         }
     }
@@ -58,9 +71,11 @@ public class ChatRoom extends Thread {
                     Matcher matcher = pattern.matcher(message);
 
                     if (matcher.matches() && DayTimer.isDay()) {
-                        rolesAdapter.getRoles().vote(matcher.group(1));
-                        th.writeln("투표되었습니다.");
-                        rolesAdapter.getRoles().voted = true;
+                        if (!rolesAdapter.getRoles().voted) {
+                            rolesAdapter.getRoles().vote(matcher.group(1));
+                            th.writeln("투표되었습니다.");
+                            rolesAdapter.getRoles().voted = true;
+                        }
                     } else {
                         sendMessageAll("[" + th.getUserName() + "] " + message);
                     }
@@ -135,6 +150,7 @@ public class ChatRoom extends Thread {
         }
 
         sendMessageAll("=== 게임 시작 ===");
+        sendMessageAll("밤이 찾아옵니다.");
 
         if (dayTimer == null) {
             dayTimer = new DayTimer(this);
@@ -146,15 +162,17 @@ public class ChatRoom extends Thread {
             countMafia = 0;
             countCitizen = 0;
 
-            for (ChatServerTh c : list) {
-                if (c.getRoles() instanceof Mafia) {
-                    countMafia++;
-                } else if (c.getRoles() instanceof Citizen) {
-                    countCitizen++;
-                }
+            synchronized (list) {
+                for (ChatServerTh c : list) {
+                    if (c.getRoles() instanceof Mafia) {
+                        countMafia++;
+                    } else if (c.getRoles() instanceof Citizen) {
+                        countCitizen++;
+                    }
 
-                if (countMafia == countCitizen && countMafia == 0) {
-                    break winnerCheck;
+                    if (countMafia == countCitizen && countMafia == 0) {
+                        break winnerCheck;
+                    }
                 }
             }
         }
