@@ -201,6 +201,8 @@ public class ChatRoom extends Thread {
             }
         }
 
+        DayTimer.dayTimerflag = false;
         System.out.println("승리: " + winners);
+
     }
 }

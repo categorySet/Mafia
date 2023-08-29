@@ -9,7 +9,7 @@ public class DayTimer extends Thread {
     private static boolean isDay = false;
     private int time = 30;
 
-    private boolean flag = true;
+    public static boolean dayTimerflag = true;
 
     public static boolean isDay() {
         return isDay;
@@ -23,7 +23,7 @@ public class DayTimer extends Thread {
 
     @Override
     public void run() {
-        while (true) {
+        while (dayTimerflag) {
             while (time > 0) {
                 time--;
                 try {
