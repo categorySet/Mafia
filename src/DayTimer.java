@@ -23,8 +23,6 @@ public class DayTimer extends Thread {
 
     @Override
     public void run() {
-
-
         while (true) {
             while (time > 0) {
                 time--;
@@ -46,6 +44,16 @@ public class DayTimer extends Thread {
                 Mafia.nextKill = null;
 
             } else {
+                if (Mafia.nextKill.equals(Doctor.savePerson)) {
+                    room.sendMessageAll("의사가 " + Doctor.savePerson + "님을 구했습니다.");
+                } else {
+                    if (Mafia.nextKill != null) {
+                        room.kill(Mafia.nextKill);
+                    } else {
+                        room.sendMessageAll("평화로운 밤이 지나갔습니다.");
+                    }
+                }
+
                 isDay = true;
                 room.sendMessageAll("낮이 되었습니다.");
 
