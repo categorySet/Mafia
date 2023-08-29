@@ -34,7 +34,10 @@ public class DayTimer extends Thread {
             }
 
             if (isDay) {
-                room.killByVoting(Roles.getResult());
+                String voteResult = Roles.getResult();
+                if (voteResult != null) {
+                    room.killByVoting(voteResult);
+                }
 
                 isDay = false;
                 room.sendMessageAll("밤이 되었습니다.");

@@ -35,7 +35,9 @@ public class ChatRoom extends Thread {
     }
 
     public void kill(String name) {
-        for (ChatServerTh c : list) {
+        for (int i = list.size() - 1; i >= 0; i--) {
+            ChatServerTh c = list.get(i);
+
             if (c.getUserName().equals(name)) {
                 delClient(c);
                 c.writeln("당신은 마피아에 의해 죽었습니다.");
@@ -48,6 +50,7 @@ public class ChatRoom extends Thread {
         synchronized (list) {
             for (int i = list.size() - 1; i >= 0; i--) {
                 ChatServerTh c = list.get(i);
+
                 if (c.getUserName().equals(name)) {
                     delClient(c);
                     c.writeln("투표에 의해 죽었습니다..");
@@ -163,7 +166,9 @@ public class ChatRoom extends Thread {
             countCitizen = 0;
 
             synchronized (list) {
-                for (ChatServerTh c : list) {
+                for (int i = list.size() - 1; i >= 0; i--) {
+                    ChatServerTh c = list.get(i);
+
                     if (c.getRoles() instanceof Mafia) {
                         countMafia++;
                     } else if (c.getRoles() instanceof Citizen) {
