@@ -34,12 +34,20 @@ public class ChatRoom extends Thread {
         list.remove(chatServerTh);
     }
 
+    public void setClientDead(ChatServerTh chatServerTh) {
+        for (ChatServerTh c : list) {
+            if (c.equals(chatServerTh)) {
+                c.setAlivePerson(false);
+            }
+        }
+    }
+
     public void kill(String name) {
         for (int i = list.size() - 1; i >= 0; i--) {
             ChatServerTh c = list.get(i);
 
             if (c.getUserName().equals(name)) {
-                delClient(c);
+                setClientDead(c);
                 c.writeln("당신은 마피아에 의해 죽었습니다.");
                 sendMessageAll("악랄한 마피아에 의해 " + name + "님이 죽었습니다.");
             }
@@ -52,7 +60,7 @@ public class ChatRoom extends Thread {
                 ChatServerTh c = list.get(i);
 
                 if (c.getUserName().equals(name)) {
-                    delClient(c);
+                    setClientDead(c);
                     c.writeln("투표에 의해 죽었습니다..");
                     sendMessageAll("투표에 의해 " + name + "님이 죽었습니다.");
                 }
@@ -62,47 +70,42 @@ public class ChatRoom extends Thread {
 
     public void sendMessageAll(String message) {
         for (ChatServerTh th : list) {
-            th.writeln(message);
+            if (th.isAlivePerson()) {
+                th.writeln(message);
+            }
         }
     }
 
     public void sendMessageAll(String message, RolesAdapter rolesAdapter, ChatServerTh chatServerTh) {
-        if (DayTimer.isDay()) {
-            for (ChatServerTh th : list) {
-                if (th == chatServerTh) {
-                    Pattern pattern = Pattern.compile("/vote (\\w+)");
-                    Matcher matcher = pattern.matcher(message);
+        if (chatServerTh.isAlivePerson()) {
+            if (DayTimer.isDay()) {
+                for (ChatServerTh th : list) {
+                    if (th == chatServerTh) {
+                        Pattern pattern = Pattern.compile("/vote (\\w+)");
+                        Matcher matcher = pattern.matcher(message);
 
-                    if (matcher.matches() && DayTimer.isDay()) {
-                        if (!rolesAdapter.getRoles().voted) {
-                            rolesAdapter.getRoles().vote(matcher.group(1));
-                            th.writeln("투표되었습니다.");
-                            rolesAdapter.getRoles().voted = true;
+                        if (matcher.matches() && DayTimer.isDay()) {
+                            if (!rolesAdapter.getRoles().voted) {
+                                rolesAdapter.getRoles().vote(matcher.group(1));
+                                th.writeln("투표되었습니다.");
+                                rolesAdapter.getRoles().voted = true;
+                            }
+                        } else {
+                            sendMessageAll("[" + th.getUserName() + "] " + message);
                         }
-                    } else {
-                        sendMessageAll("[" + th.getUserName() + "] " + message);
                     }
                 }
-            }
-        } else {
-            for (ChatServerTh th : list) {
-                if (th == chatServerTh) {
-                    Pattern pattern = Pattern.compile("/use (\\w+)");
-                    Matcher matcher = pattern.matcher(message);
+            } else {
+                for (ChatServerTh th : list) {
+                    if (th == chatServerTh) {
+                        Pattern pattern = Pattern.compile("/use (\\w+)");
+                        Matcher matcher = pattern.matcher(message);
 
-                    if (matcher.matches() && !DayTimer.isDay()) {
-                        th.writeln(rolesAdapter.useAbllitity(matcher.group(1)));
+                        if (matcher.matches() && !DayTimer.isDay()) {
+                            th.writeln(rolesAdapter.useAbllitity(matcher.group(1)));
+                        }
                     }
                 }
-            }
-        }
-    }
-
-
-    public void sendMessageExceptMe(String message, String name) {
-        for (ChatServerTh th : list) {
-            if (!th.getUserName().equals(name)) {
-                th.writeln(th.getUserName() + ": " + message);
             }
         }
     }
@@ -170,9 +173,9 @@ public class ChatRoom extends Thread {
                 for (int i = list.size() - 1; i >= 0; i--) {
                     ChatServerTh c = list.get(i);
 
-                    if (c.getRoles() instanceof Mafia) {
+                    if (c.getRoles() instanceof Mafia && c.isAlivePerson()) {
                         countMafia++;
-                    } else if (c.getRoles() instanceof Citizen) {
+                    } else if (c.getRoles() instanceof Citizen && c.isAlivePerson()) {
                         countCitizen++;
                     }
                 }
@@ -201,7 +204,7 @@ public class ChatRoom extends Thread {
             }
         }
 
-        DayTimer.dayTimerflag = false;
+        dayTimer.dayTimerflag = false;
         System.out.println("승리: " + winners);
 
     }

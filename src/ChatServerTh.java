@@ -14,6 +14,7 @@ public class ChatServerTh extends Thread {
     private String userName;
     private BufferedReader reader;
     private PrintWriter writer;
+    private boolean alivePerson = true;
 
     private RolesAdapter rolesAdapter;
 
@@ -50,6 +51,14 @@ public class ChatServerTh extends Thread {
 
     public Roles getRoles() {
         return rolesAdapter.getRoles();
+    }
+
+    public boolean isAlivePerson() {
+        return alivePerson;
+    }
+
+    public void setAlivePerson(boolean alivePerson) {
+        this.alivePerson = alivePerson;
     }
 
     @Override

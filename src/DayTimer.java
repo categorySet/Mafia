@@ -9,7 +9,7 @@ public class DayTimer extends Thread {
     private static boolean isDay = false;
     private int time = 30;
 
-    public static boolean dayTimerflag = true;
+    public boolean dayTimerflag = true;
 
     public static boolean isDay() {
         return isDay;
