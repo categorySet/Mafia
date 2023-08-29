@@ -5,31 +5,30 @@ import java.util.Timer;
  */
 public class DayTimer extends Thread {
 
-    private Timer timer = new Timer();
-    private static boolean isDay = false;
+    private boolean isDay = false;
     private int time = 30;
 
     public boolean dayTimerflag = true;
 
-    public static boolean isDay() {
+    public boolean isDay() {
         return isDay;
     }
 
-    private ChatRoom room;
+    private MafiaRoom room;
 
-    public DayTimer(final ChatRoom room) {
+    public DayTimer(final MafiaRoom room) {
         this.room = room;
     }
 
     @Override
     public void run() {
-        while (dayTimerflag) {
+        day: while (dayTimerflag) {
             while (time > 0) {
                 time--;
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    continue day;
                 }
             }
 
@@ -44,7 +43,7 @@ public class DayTimer extends Thread {
 
                 Mafia.killed = false;
                 Doctor.saved = false;
-                Police.scaned = false;
+                Police.scanned = false;
 
                 Mafia.nextKill = null;
 

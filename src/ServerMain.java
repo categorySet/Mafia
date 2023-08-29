@@ -5,20 +5,20 @@ import java.net.Socket;
 public class ServerMain {
 
     public static void main(String[] args) {
-        ChatRoom chatRoom = new ChatRoom();
+        MafiaRoom mafiaRoom = new MafiaRoom();
 
-        chatRoom.start();
+        mafiaRoom.start();
 
         try {
-            ServerSocket serverSocket = new ServerSocket(5001);
+            ServerSocket serverSocket = new ServerSocket(50001);
 
             while (true) {
                 Socket socket = serverSocket.accept();
                 System.out.println("[소켓 연결]" + socket.getInetAddress());
 
-                ChatServerTh chatServerTh = new ChatServerTh(socket, chatRoom);
+                ChatServerTh chatServerTh = new ChatServerTh(socket, mafiaRoom);
 
-                chatRoom.addClient(chatServerTh);
+                mafiaRoom.addClient(chatServerTh);
 
                 chatServerTh.start();
             }

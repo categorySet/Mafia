@@ -3,15 +3,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class ChatServerTh extends Thread {
 
     // 역할의 개수
     private static final int ROLE_NUMBER = 4;
 
-    private ChatRoom gameRoom;
+    private MafiaRoom mafiaRoom;
 
     private Socket socket;
     private String userName;
@@ -22,9 +20,9 @@ public class ChatServerTh extends Thread {
     private RolesAdapter rolesAdapter;
 
 
-    public ChatServerTh(Socket socket, ChatRoom gameRoom) {
+    public ChatServerTh(Socket socket, MafiaRoom mafiaRoom) {
         this.socket = socket;
-        this.gameRoom = gameRoom;
+        this.mafiaRoom = mafiaRoom;
 
         try {
             reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -85,19 +83,19 @@ public class ChatServerTh extends Thread {
 
             switch (select) {
                 case 0:
-                    rolesAdapter = new RolesAdapter(new Mafia(gameRoom));
+                    rolesAdapter = new RolesAdapter(new Mafia(mafiaRoom));
                     break;
                 case 1:
-                    rolesAdapter = new RolesAdapter(new Citizen(gameRoom));
+                    rolesAdapter = new RolesAdapter(new Citizen(mafiaRoom));
                     break;
                 case 2:
-                    rolesAdapter = new RolesAdapter(new Doctor(gameRoom));
+                    rolesAdapter = new RolesAdapter(new Doctor(mafiaRoom));
                     break;
                 case 3:
-                    rolesAdapter = new RolesAdapter(new Police(gameRoom));
+                    rolesAdapter = new RolesAdapter(new Police(mafiaRoom));
                     break;
                 default:
-                    rolesAdapter = new RolesAdapter(new Citizen(gameRoom));
+                    rolesAdapter = new RolesAdapter(new Citizen(mafiaRoom));
             }
 
             writeln("당신은 " + rolesAdapter.toString() + "입니다.");
@@ -110,18 +108,18 @@ public class ChatServerTh extends Thread {
                 writeln("'/use 이름' 명령어로 밤에 한 사람의 직업을 확인할 수 있습니다.");
             }
 
-            gameRoom.sendMessageAll(userName + "님이 입장하셨습니다.");
+            mafiaRoom.sendMessageAll(userName + "님이 입장하셨습니다.");
 
-            ChatRoom.selected++;
+            MafiaRoom.selected++;
 
-            while (ChatRoom.selected < ChatRoom.MIN_PERSON) {
+            while (MafiaRoom.selected < MafiaRoom.MIN_PERSON) {
                 Thread.sleep(1000);
             }
 
             while (true) {
                 String read = reader.readLine();
 
-                gameRoom.sendMessageAll(read, rolesAdapter, this);
+                mafiaRoom.sendMessageAll(read, rolesAdapter, this);
             }
         } catch (Exception e) {
             e.printStackTrace();
