@@ -8,6 +8,9 @@ import java.util.regex.Pattern;
 
 public class ChatServerTh extends Thread {
 
+    // 역할의 개수
+    private static final int ROLE_NUMBER = 4;
+
     private ChatRoom gameRoom;
 
     private Socket socket;
@@ -78,7 +81,7 @@ public class ChatServerTh extends Thread {
                 } catch (NumberFormatException e) {
                     continue;
                 }
-            } while (!(0 <= select && select < Role.values().length));
+            } while (!(0 <= select && select < ROLE_NUMBER));
 
             switch (select) {
                 case 0:
