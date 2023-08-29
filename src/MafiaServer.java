@@ -2,15 +2,16 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class ServerMain {
+public class MafiaServer implements Gamable {
 
-    public static void main(String[] args) {
+    @Override
+    public void run(int port) {
         MafiaRoom mafiaRoom = new MafiaRoom();
 
         mafiaRoom.start();
 
         try {
-            ServerSocket serverSocket = new ServerSocket(50001);
+            ServerSocket serverSocket = new ServerSocket(port);
 
             while (true) {
                 Socket socket = serverSocket.accept();
