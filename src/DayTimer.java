@@ -34,6 +34,8 @@ public class DayTimer extends Thread {
             }
 
             if (isDay) {
+                room.killByVoting(Roles.getResult());
+
                 isDay = false;
                 room.sendMessageAll("밤이 되었습니다.");
 
@@ -44,14 +46,12 @@ public class DayTimer extends Thread {
                 Mafia.nextKill = null;
 
             } else {
-                if (Mafia.nextKill.equals(Doctor.savePerson)) {
+                if (Mafia.nextKill == null) {
+                    room.sendMessageAll("평화로운 밤이 지나갔습니다.");
+                } else if (Mafia.nextKill.equals(Doctor.savePerson)) {
                     room.sendMessageAll("의사가 " + Doctor.savePerson + "님을 구했습니다.");
                 } else {
-                    if (Mafia.nextKill != null) {
-                        room.kill(Mafia.nextKill);
-                    } else {
-                        room.sendMessageAll("평화로운 밤이 지나갔습니다.");
-                    }
+                    room.kill(Mafia.nextKill);
                 }
 
                 isDay = true;
