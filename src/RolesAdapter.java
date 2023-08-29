@@ -28,7 +28,7 @@ public class RolesAdapter {
 
             if (!Police.scanned) {
                 Police.scanned = true;
-                return name + " 님의 직업은" + p.scan(name) + "입니다.";
+                return name + " 님의 직업은 " + p.scan(name) + "입니다.";
             }
         }
 
