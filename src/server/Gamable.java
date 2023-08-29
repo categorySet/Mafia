@@ -1,3 +1,5 @@
+package server;
+
 /**
  * 게임들의 인터페이스
  * @author categorySet

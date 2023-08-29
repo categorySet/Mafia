@@ -1,3 +1,12 @@
+package server;
+
+
+import Roles.Doctor;
+import Roles.Mafia;
+import Roles.Police;
+import Roles.Roles;
+import room.MafiaRoom;
+
 /**
  * 시간을 관리하는 클래스. 낮과 밤을 결정하고 능력 사용 여부를 초기화 함
  * @author categorySet

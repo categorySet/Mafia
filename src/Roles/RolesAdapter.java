@@ -1,3 +1,5 @@
+package Roles;
+
 /**
  * 역할들이 사용하는 능력 형식을 통일하기 위한 클래스
  * @author categorySet
@@ -13,7 +15,7 @@ public class RolesAdapter {
     }
 
     /**
-     * Citizen 외의 역할들이 밤에 능력을 사용
+     * Roles.Citizen 외의 역할들이 밤에 능력을 사용
      * @param name 플레이어의 이름
      * @return 출력할 메시지
      */

@@ -1,3 +1,7 @@
+package Roles;
+
+import room.MafiaRoom;
+
 /**
  * 경찰. {@link Citizen}편으로 밤에 유저에게 능력을 사용하면 역할을 알 수 있음
  * @author categorySet

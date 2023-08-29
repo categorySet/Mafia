@@ -1,3 +1,7 @@
+package Roles;
+
+import room.MafiaRoom;
+
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;

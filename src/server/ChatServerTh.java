@@ -1,3 +1,8 @@
+package server;
+
+import Roles.*;
+import room.MafiaRoom;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -102,12 +107,12 @@ public class ChatServerTh extends Thread {
             }
 
             writeln("당신은 " + rolesAdapter.toString() + "입니다.");
-            if (rolesAdapter.toString().equals("Mafia")) {
+            if (rolesAdapter.toString().equals("Roles.Mafia")) {
                 writeln("'/use 이름' 명령어로 밤에 한명을 죽일 수 있습니다.");
                 writeln("마피아와 시민이 같은 수가 되면 승리합니다.");
-            } else if (rolesAdapter.toString().equals("Doctor")) {
+            } else if (rolesAdapter.toString().equals("Roles.Doctor")) {
                 writeln("'/use 이름' 명령어로 밤에 마피아에 지목된 사람을 살릴 수 있습니다.");
-            } else if (rolesAdapter.toString().equals("Police")) {
+            } else if (rolesAdapter.toString().equals("Roles.Police")) {
                 writeln("'/use 이름' 명령어로 밤에 한 사람의 직업을 확인할 수 있습니다.");
             }
 

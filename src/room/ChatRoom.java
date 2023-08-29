@@ -1,3 +1,7 @@
+package room;
+
+import server.ChatServerTh;
+
 import java.util.ArrayList;
 
 /**

@@ -1,3 +1,12 @@
+package room;
+
+import Roles.Citizen;
+import Roles.Mafia;
+import Roles.Roles;
+import Roles.RolesAdapter;
+import server.ChatServerTh;
+import server.DayTimer;
+
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -22,7 +31,7 @@ public class MafiaRoom extends ChatRoom {
     private static List<String> winners;
 
     public MafiaRoom() {
-        super.list = new ArrayList<>();
+        super.list = new ArrayList<ChatServerTh>();
         this.deadList = new ArrayList<>();
     }
 
