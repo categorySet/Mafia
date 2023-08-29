@@ -70,7 +70,7 @@ public class ChatClientMain {
 	public static void main(String[] args) {
 		try {
 			// 서버연결
-			Socket socket = new Socket("localhost", 5001);
+			Socket socket = new Socket("localhost", 50001);
 
 			// 소켓 입출력 스트림 생성
 			BufferedReader in = 
