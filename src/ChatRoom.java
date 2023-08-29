@@ -1,6 +1,7 @@
 import java.util.ArrayList;
 
 /**
+ * 채팅방 클래스. 게임방을 위한 추상 클래스
  * @author categorySet
  */
 public abstract class ChatRoom extends Thread {
