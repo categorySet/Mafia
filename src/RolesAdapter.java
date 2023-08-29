@@ -1,3 +1,7 @@
+/**
+ * 역할들이 사용하는 능력 형식을 통일하기 위한 클래스
+ * @author categorySet
+ */
 public class RolesAdapter {
 
     private Roles roles;
@@ -8,7 +12,12 @@ public class RolesAdapter {
         this.roles.toString();
     }
 
-    public String useAbllitity(String name) {
+    /**
+     * Citizen 외의 역할들이 밤에 능력을 사용
+     * @param name 플레이어의 이름
+     * @return 출력할 메시지
+     */
+    public String useAbility(String name) {
         if (roles instanceof Mafia) {
             if (!Mafia.killed) {
                 Mafia.killed = true;

@@ -2,6 +2,10 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * 역할 클래스. 투표 여부를 저장하고 투표 결과를 생성
+ * @author categorySet
+ */
 public abstract class Roles {
 
     public MafiaRoom mafiaRoom;

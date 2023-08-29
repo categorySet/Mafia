@@ -1,5 +1,8 @@
 import java.util.ArrayList;
 
+/**
+ * @author categorySet
+ */
 public abstract class ChatRoom extends Thread {
 
     protected static ArrayList<ChatServerTh> list;
@@ -12,6 +15,11 @@ public abstract class ChatRoom extends Thread {
         list.remove(chatServerTh);
     }
 
+    /**
+     * 특정 유저에게 귓속말
+     * @param message 전달할 메시지
+     * @param name 전달할 유저 이름
+     */
     public void sendMessage(String message, String name) {
         for (ChatServerTh th : list) {
             if (th.getUserName().equals(name)) {
@@ -20,6 +28,10 @@ public abstract class ChatRoom extends Thread {
         }
     }
 
+    /**
+     * 현재 방에 있는 유저 전부에게 메시지 전달
+     * @param message 전달할 메시지
+     */
     public void sendMessageAll(String message) {
         for (ChatServerTh th : list) {
             th.writeln(message);

@@ -1,3 +1,7 @@
+/**
+ * 마피아. 밤에 능력을 사용하면 죽일 사람 한명을 선택할 수 있음
+ * @author categorySet
+ */
 public class Mafia extends Roles {
 
     public static boolean killed = false;
@@ -8,13 +12,12 @@ public class Mafia extends Roles {
         super(mafiaRoom);
     }
 
+    /**
+     * @param name 살해할 사람 이름
+     */
     public void kill(String name) {
         nextKill = name;
         killed = true;
-    }
-
-    public void clear() {
-        killed = false;
     }
 
     @Override

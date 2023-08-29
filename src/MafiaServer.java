@@ -2,6 +2,11 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+/**
+ * 마피아 게임이 실제로 실행되는 클래스
+ * @see Gamable
+ * @author categorySet
+ */
 public class MafiaServer implements Gamable {
 
     @Override

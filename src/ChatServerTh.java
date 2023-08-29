@@ -4,9 +4,12 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+/**
+ * 직업 선택과 대화를 호출할 수 있는 클래스
+ * @author categorySet
+ */
 public class ChatServerTh extends Thread {
 
-    // 역할의 개수
     private static final int ROLE_NUMBER = 4;
 
     private MafiaRoom mafiaRoom;

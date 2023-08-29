@@ -1,5 +1,9 @@
+/**
+ * 게임들의 인터페이스
+ * @author categorySet
+ */
 public interface Gamable {
 
-    public void run(int port);
+    void run(int port);
 
 }

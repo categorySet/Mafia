@@ -3,7 +3,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * 플레이어들의 상태와 대화를 담당하는 클래스
+ * 플레이어들와 게임의 상태, 대화를 담당하는 클래스.
+ * @author categorySet
  */
 public class MafiaRoom extends ChatRoom {
 
@@ -97,7 +98,7 @@ public class MafiaRoom extends ChatRoom {
                         Matcher matcher = pattern.matcher(message);
 
                         if (matcher.matches() && !dayTimer.isDay()) {
-                            th.writeln(rolesAdapter.useAbllitity(matcher.group(1)));
+                            th.writeln(rolesAdapter.useAbility(matcher.group(1)));
                         }
                     }
                 }
