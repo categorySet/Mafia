@@ -1,5 +1,5 @@
 /**
- * 마피아. 밤에 능력을 사용하면 죽일 사람 한명을 선택할 수 있음
+ * 마피아. 밤에 능력을 사용하면 죽일 사람 한 명을 선택할 수 있음
  * @author categorySet
  */
 public class Mafia extends Roles {
