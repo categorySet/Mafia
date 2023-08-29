@@ -57,7 +57,8 @@ class ReadTh extends Thread {
 				}
 				System.out.println(str);
 			} catch (IOException e) {
-				e.printStackTrace();
+				System.out.println("채팅을 종료합니다.");
+				break;
 			}
 		}
 	}

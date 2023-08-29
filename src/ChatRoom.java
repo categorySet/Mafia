@@ -161,7 +161,8 @@ public class ChatRoom extends Thread {
             dayTimer.start();
         }
 
-        winnerCheck : while (true) {
+        boolean flag = true;
+        while (flag) {
             countMafia = 0;
             countCitizen = 0;
 
@@ -174,11 +175,12 @@ public class ChatRoom extends Thread {
                     } else if (c.getRoles() instanceof Citizen) {
                         countCitizen++;
                     }
-
-                    if (countMafia == countCitizen && countMafia == 0) {
-                        break winnerCheck;
-                    }
                 }
+            }
+
+            if (countMafia >= countCitizen || countMafia == 0) {
+                flag = false;
+                System.out.println(countMafia + " " + countCitizen);
             }
         }
 
@@ -198,5 +200,7 @@ public class ChatRoom extends Thread {
                 }
             }
         }
+
+        System.out.println("승리: " + winners);
     }
 }
