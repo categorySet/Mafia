@@ -1,7 +1,5 @@
-import java.util.Timer;
-
 /**
- * 시간 관리하는 클래스. 낮과 밤을 결정하고 능력 사용 여부를 초기화함
+ * 시간을 관리하는 클래스. 낮과 밤을 결정하고 능력 사용 여부를 초기화 함
  * @author categorySet
  */
 public class DayTimer extends Thread {
@@ -15,7 +13,7 @@ public class DayTimer extends Thread {
         return isDay;
     }
 
-    private MafiaRoom room;
+    private final MafiaRoom room;
 
     public DayTimer(final MafiaRoom room) {
         this.room = room;
