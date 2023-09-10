@@ -1,1 +1,3 @@
-# Roles.Mafia
+# Mafia
+
+팀 프로젝트를 위한 마피아 게임
